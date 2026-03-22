@@ -1,0 +1,159 @@
+.pcard {
+    position: relative;
+    background: transparent;
+    transition: var(--transition-smooth);
+}
+
+.pcard__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.pcard__img-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+
+.pcard__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pcard__badges {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 5;
+}
+
+.pcard__badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: white;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+}
+
+.pcard__badge--sale {
+    background: var(--accent);
+    color: white;
+}
+
+.pcard__fav {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    opacity: 0;
+    transform: translateX(10px);
+    transition: var(--transition-smooth);
+    z-index: 5;
+    box-shadow: var(--shadow-sm);
+}
+
+.pcard__fav--visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.pcard__fav:hover {
+    color: var(--accent);
+}
+
+.pcard__overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.pcard__add-btn {
+    width: 100%;
+    background: white !important;
+    color: var(--primary) !important;
+    border: none !important;
+    font-size: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: var(--shadow-md);
+    gap: 10px;
+}
+
+.pcard__add-btn:hover {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+.pcard__info {
+    padding: 20px 0;
+}
+
+.pcard__brand {
+    font-size: 0.65rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.pcard__name {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-weight: 400;
+}
+
+.pcard__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pcard__prices {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pcard__price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.pcard__original {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.pcard__rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+    .pcard__overlay {
+        display: none;
+    }
+
+    .pcard__badge--new {
+        display: none;
+    }
+}

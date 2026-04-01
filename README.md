@@ -79,6 +79,15 @@ npm run dev
 
 ---
 
+## 👨‍💻 Author
+**Rajeev Ranjan Singh**  
+*Frontend Developer*
+
+⭐ If you found this project useful, consider giving it a star.
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License.
+

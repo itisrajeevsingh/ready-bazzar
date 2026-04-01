@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import api from '../utils/api';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -13,11 +15,40 @@ export const CartProvider = ({ children }) => {
             return [];
         }
     });
+    const { userInfo } = useAuth();
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     useEffect(() => {
-        localStorage.setItem('readyBazzarCart', JSON.stringify(cartItems));
-    }, [cartItems]);
+        const fetchCart = async () => {
+            if (userInfo) {
+                try {
+                    const { data } = await api.get('/cart');
+                    setCartItems(data.cartItems || []);
+                } catch (error) {
+                    console.error('Error fetching cart:', error);
+                }
+            } else {
+                const saved = localStorage.getItem('readyBazzarCart');
+                if (saved) setCartItems(JSON.parse(saved));
+            }
+        };
+        fetchCart();
+    }, [userInfo]);
+
+    useEffect(() => {
+        const syncCart = async () => {
+            if (userInfo) {
+                try {
+                    await api.post('/cart', { cartItems });
+                } catch (error) {
+                    console.error('Error syncing cart:', error);
+                }
+            } else {
+                localStorage.setItem('readyBazzarCart', JSON.stringify(cartItems));
+            }
+        };
+        syncCart();
+    }, [cartItems, userInfo]);
 
     const addToCart = (product, selectedSize, selectedColor, quantity = 1) => {
         setCartItems(prev => {

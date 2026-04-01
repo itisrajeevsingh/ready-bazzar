@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Search, Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const { getCartCount, setIsCartOpen } = useCart();
+    const { userInfo, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSearch = (e) => {
@@ -72,7 +74,14 @@ const Navbar = () => {
                         <ShoppingBag size={20} />
                         {getCartCount() > 0 && <span className="navbar__cart-badge">{getCartCount()}</span>}
                     </button>
-                    <button className="navbar__action-btn hide-mobile"><User size={20} /></button>
+                    {userInfo ? (
+                        <div className="navbar__user-menu hide-mobile">
+                            <span className="navbar__user-name uppercase tracking-luxury">{userInfo.name.split(' ')[0]}</span>
+                            <button onClick={logout} className="navbar__logout-btn">Logout</button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="navbar__action-btn hide-mobile"><User size={20} /></Link>
+                    )}
                 </div>
             </div>
 

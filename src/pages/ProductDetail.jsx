@@ -9,7 +9,10 @@ const ProductDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { addToCart } = useCart();
-    const product = products.find(p => p.id === parseInt(id));
+
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const [mainImage, setMainImage] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
@@ -18,14 +21,35 @@ const ProductDetail = () => {
     const [adding, setAdding] = useState(false);
 
     useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                setLoading(true);
+                const { data } = await api.get(`/products/${id}`);
+                setProduct(data);
+                setMainImage(data.image); // Use data.image as default
+                if (data.images && data.images.length > 0) {
+                    setMainImage(data.images[0]);
+                }
+                setSelectedSize(data.sizes[0]);
+                setSelectedColor(data.colors[0]);
+                setLoading(false);
+            } catch (err) {
+                setError(err.response?.data?.message || err.message);
+                setLoading(false);
+            }
+        };
         window.scrollTo(0, 0);
-        if (product) {
-            setMainImage(product.images[0]);
-            setSelectedSize(product.sizes[0]);
-            setSelectedColor(product.colors[0]);
-        }
-    }, [id, product]);
+        fetchProduct();
+    }, [id]);
 
+    if (loading) return <div className="container pd-loading">Loading...</div>;
+    if (error) return (
+        <div className="pd-notfound container">
+            <h2>Error</h2>
+            <p>{error}</p>
+            <Link to="/shop" className="btn btn-primary">Return to Shop</Link>
+        </div>
+    );
     if (!product) {
         return (
             <div className="pd-notfound container">
@@ -61,7 +85,7 @@ const ProductDetail = () => {
                 {/* Gallery */}
                 <div className="pd__gallery">
                     <div className="pd__thumbs">
-                        {product.images.map((img, i) => (
+                        {(product.images && product.images.length > 0 ? product.images : [product.image]).map((img, i) => (
                             <button
                                 key={i}
                                 className={`pd__thumb ${mainImage === img ? 'pd__thumb--active' : ''}`}

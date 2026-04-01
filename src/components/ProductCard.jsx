@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
         >
-            <Link to={`/product/${product.id}`} className="pcard__link">
+            <Link to={`/product/${product._id}`} className="pcard__link">
                 <div className="pcard__img-wrap">
                     <motion.img
                         src={product.image}

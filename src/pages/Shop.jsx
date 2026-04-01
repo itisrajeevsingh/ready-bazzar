@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Filter, X, ChevronDown } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { products, categories, colorOptions, sizeOptions } from '../data/products';
+import api from '../utils/api';
+import { categories, colorOptions, sizeOptions } from '../data/products';
 import './Shop.css';
 
 const Shop = () => {
@@ -17,6 +18,23 @@ const Shop = () => {
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [sortBy, setSortBy] = useState('recommended');
     const [filterOpen, setFilterOpen] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const { data } = await api.get('/products');
+                setProducts(data);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -164,7 +182,11 @@ const Shop = () => {
 
                 {/* Product Grid */}
                 <main className="shop__main">
-                    {filtered.length === 0 ? (
+                    {loading ? (
+                        <div className="shop__loading">Loading products...</div>
+                    ) : error ? (
+                        <div className="shop__error">Error: {error}</div>
+                    ) : filtered.length === 0 ? (
                         <div className="shop__empty">
                             <Filter size={48} opacity={0.3} />
                             <h3>No products found</h3>
